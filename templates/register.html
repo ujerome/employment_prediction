@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title> Employment Prediction</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+
+  <!-- Bootstrap CSS -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+
+  <!-- Bootstrap Icons -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+    rel="stylesheet"
+  />
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      margin: 0;
+      background: linear-gradient(135deg, #f8f9fa, #e0e7ff);
+      transition: background-color 0.5s ease, color 0.5s ease;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 1rem;
+    }
+    body.dark-mode {
+      background: #121217;
+      color: #e0e0e0;
+    }
+    .card-container {
+      background: white;
+      max-width: 480px;
+      width: 100%;
+      padding: 2.5rem 3rem;
+      border-radius: 1rem;
+      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.12);
+      transition: background-color 0.5s ease;
+      position: relative;
+    }
+    body.dark-mode .card-container {
+      background: #1e1e2f;
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.6);
+    }
+    .card-container h3 {
+      text-align: center;
+      color: #0d6efd;
+      font-weight: 700;
+      margin-bottom: 1.8rem;
+    }
+    .form-floating > label {
+      color: #6c757d;
+      font-weight: 500;
+      transition: all 0.2s ease-in-out;
+      pointer-events: none;
+    }
+    .form-control:focus ~ label,
+    .form-control:not(:placeholder-shown) ~ label {
+      font-size: 0.85rem;
+      color: #0d6efd;
+      top: 0.2rem;
+      left: 0.75rem;
+      font-weight: 600;
+    }
+    body.dark-mode .form-floating > label {
+      color: #a0a0a0;
+    }
+    body.dark-mode .form-control:focus ~ label,
+    body.dark-mode .form-control:not(:placeholder-shown) ~ label {
+      color: #66a3ff;
+    }
+    .form-control:focus {
+      border-color: #0d6efd;
+      box-shadow: 0 0 6px #0d6efd80;
+    }
+    body.dark-mode .form-control {
+      background-color: #2a2a3b;
+      border-color: #555;
+      color: #ddd;
+    }
+    body.dark-mode .form-control::placeholder {
+      color: #777;
+    }
+    .toggle-password {
+      position: absolute;
+      top: 50%;
+      right: 1rem;
+      transform: translateY(-50%);
+      font-size: 1.25rem;
+      color: #888;
+      cursor: pointer;
+      transition: color 0.3s ease;
+      z-index: 2;
+    }
+    .toggle-password:hover {
+      color: #0d6efd;
+    }
+    body.dark-mode .toggle-password {
+      color: #bbb;
+    }
+    body.dark-mode .toggle-password:hover {
+      color: #66a3ff;
+    }
+    #password-strength {
+      height: 6px;
+      border-radius: 3px;
+      background: #ddd;
+      margin-top: 0.25rem;
+      overflow: hidden;
+    }
+    #password-strength > div {
+      height: 100%;
+      width: 0%;
+      transition: width 0.4s ease;
+    }
+    #password-strength.weak > div {
+      background-color: #dc3545;
+      width: 33%;
+    }
+    #password-strength.medium > div {
+      background-color: #ffc107;
+      width: 66%;
+    }
+    #password-strength.strong > div {
+      background-color: #198754;
+      width: 100%;
+    }
+    .input-validation {
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.1rem;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .valid-feedback-icon {
+      color: #198754;
+      opacity: 1;
+    }
+    .invalid-feedback-icon {
+      color: #dc3545;
+      opacity: 1;
+    }
+    .form-control[aria-describedby] {
+      position: relative;
+    }
+    .form-control[aria-describedby]:hover::after {
+      content: attr(aria-describedby);
+      position: absolute;
+      bottom: 100%;
+      right: 0.5rem;
+      background: #0d6efd;
+      color: white;
+      padding: 0.3rem 0.5rem;
+      border-radius: 0.3rem;
+      font-size: 0.75rem;
+      white-space: nowrap;
+      transform: translateY(-5px);
+      opacity: 1;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+      z-index: 10;
+    }
+    .form-control[aria-describedby]::after {
+      opacity: 0;
+    }
+    button.btn-primary {
+      font-weight: 600;
+      font-size: 1.1rem;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      padding: 0.6rem 0;
+      border-radius: 0.5rem;
+      width: 100%;
+    }
+    button.btn-primary:hover {
+      background-color: #0b5ed7;
+      box-shadow: 0 4px 14px rgb(13 110 253 / 0.4);
+    }
+    button.btn-primary:active {
+      background-color: #0a58ca;
+      box-shadow: none;
+    }
+    .dark-toggle {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #0d6efd;
+      transition: color 0.3s ease;
+      user-select: none;
+      z-index: 100;
+    }
+    .dark-toggle:hover {
+      color: #0b5ed7;
+    }
+    body.dark-mode .dark-toggle {
+      color: #66a3ff;
+    }
+    body.dark-mode .dark-toggle:hover {
+      color: #99c1ff;
+    }
+    @media (max-width: 576px) {
+      .card-container {
+        padding: 2rem 1.5rem;
+      }
+      .dark-toggle {
+        font-size: 1.3rem;
+        top: 0.75rem;
+        right: 0.75rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Dark Mode Toggle -->
+  <div
+    class="dark-toggle"
+    role="button"
+    aria-label="Toggle Dark Mode"
+    tabindex="0"
+    onclick="toggleDarkMode()"
+    onkeypress="if(event.key==='Enter'){toggleDarkMode()}"
+  >
+    <i id="themeIcon" class="bi bi-moon-fill"></i>
+  </div>
+
+  <main class="card-container" role="main" aria-labelledby="registerHeading">
+    <h3 id="registerHeading">Create an Account</h3>
+
+    {% if msg %}
+      <div
+        class="alert alert-danger text-center"
+        role="alert"
+        aria-live="assertive"
+      >
+        {{ msg }}
+      </div>
+    {% endif %}
+
+    <form method="POST" action="/register" novalidate onsubmit="return validateForm()">
+      <div class="form-floating mb-3 position-relative">
+        <input
+          type="text"
+          class="form-control"
+          id="username"
+          name="username"
+          placeholder="Username"
+          required
+          aria-describedby="usernameHelp"
+          aria-invalid="false"
+        />
+        <label for="username">Username</label>
+        <i
+          class="bi bi-check-circle-fill input-validation valid-feedback-icon"
+          id="usernameValidIcon"
+          aria-hidden="true"
+        ></i>
+        <i
+          class="bi bi-x-circle-fill input-validation invalid-feedback-icon"
+          id="usernameInvalidIcon"
+          aria-hidden="true"
+        ></i>
+        <div id="usernameHelp" class="form-text">
+          Choose a unique username.
+        </div>
+      </div>
+
+      <div class="form-floating mb-3 position-relative">
+        <input
+          type="email"
+          class="form-control"
+          id="email"
+          name="email"
+          placeholder="Email"
+          required
+          aria-describedby="emailHelp"
+          aria-invalid="false"
+        />
+        <label for="email">Email</label>
+        <i
+          class="bi bi-check-circle-fill input-validation valid-feedback-icon"
+          id="emailValidIcon"
+          aria-hidden="true"
+        ></i>
+        <i
+          class="bi bi-x-circle-fill input-validation invalid-feedback-icon"
+          id="emailInvalidIcon"
+          aria-hidden="true"
+        ></i>
+        <div id="emailHelp" class="form-text">Enter a valid email address.</div>
+      </div>
+
+      <div class="form-floating mb-1 position-relative">
+        <input
+          type="password"
+          class="form-control"
+          id="password"
+          name="password"
+          placeholder="Password"
+          required
+          minlength="6"
+          aria-describedby="passwordHelp"
+          aria-invalid="false"
+        />
+        <label for="password">Password</label>
+        <i
+          class="bi bi-eye-slash toggle-password"
+          id="togglePassword"
+          role="button"
+          aria-label="Toggle password visibility"
+          tabindex="0"
+        ></i>
+        <i
+          class="bi bi-check-circle-fill input-validation valid-feedback-icon"
+          id="passwordValidIcon"
+          aria-hidden="true"
+        ></i>
+        <i
+          class="bi bi-x-circle-fill input-validation invalid-feedback-icon"
+          id="passwordInvalidIcon"
+          aria-hidden="true"
+        ></i>
+        <div id="passwordHelp" class="form-text">
+          Minimum 6 characters.
+        </div>
+        <div id="password-strength" aria-hidden="true">
+          <div></div>
+        </div>
+      </div>
+
+      <div class="form-floating mb-4 position-relative">
+        <input
+          type="password"
+          class="form-control"
+          id="confirmPassword"
+          name="confirmPassword"
+          placeholder="Confirm Password"
+          required
+          aria-describedby="confirmPasswordHelp"
+          aria-invalid="false"
+        />
+        <label for="confirmPassword">Confirm Password</label>
+        <i
+          class="bi bi-check-circle-fill input-validation valid-feedback-icon"
+          id="confirmPasswordValidIcon"
+          aria-hidden="true"
+        ></i>
+        <i
+          class="bi bi-x-circle-fill input-validation invalid-feedback-icon"
+          id="confirmPasswordInvalidIcon"
+          aria-hidden="true"
+        ></i>
+        <div id="confirmPasswordHelp" class="form-text">
+          Must match the password.
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary" aria-label="Register">
+        Register
+      </button>
+      
+            <div class="mt-4 text-center">
+                <p>You already have an account ? <a href="/login" class="text-decoration-none">Login here</a></p>
+            </div>
+    </form>
+  </main>
+
+  <!-- Bootstrap JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    const passwordInput = document.getElementById("password");
+    const confirmPasswordInput = document.getElementById("confirmPassword");
+    const togglePassword = document.getElementById("togglePassword");
+
+    const usernameInput = document.getElementById("username");
+    const emailInput = document.getElementById("email");
+
+    // Validation icon elements
+    const icons = {
+      usernameValid: document.getElementById("usernameValidIcon"),
+      usernameInvalid: document.getElementById("usernameInvalidIcon"),
+      emailValid: document.getElementById("emailValidIcon"),
+      emailInvalid: document.getElementById("emailInvalidIcon"),
+      passwordValid: document.getElementById("passwordValidIcon"),
+      passwordInvalid: document.getElementById("passwordInvalidIcon"),
+      confirmPasswordValid: document.getElementById("confirmPasswordValidIcon"),
+      confirmPasswordInvalid: document.getElementById("confirmPasswordInvalidIcon"),
+    };
+
+    // Password strength bar
+    const passwordStrengthBar = document.getElementById("password-strength");
+
+    // Show/hide password toggle
+    togglePassword.addEventListener("click", () => {
+      togglePasswordVisibility();
+    });
+    togglePassword.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") togglePasswordVisibility();
+    });
+    function togglePasswordVisibility() {
+      const type =
+        passwordInput.type === "password" ? "text" : "password";
+      passwordInput.type = type;
+      confirmPasswordInput.type = type;
+      togglePassword.classList.toggle("bi-eye");
+      togglePassword.classList.toggle("bi-eye-slash");
+    }
+
+    // Utility functions
+    function showValid(input, validIcon, invalidIcon) {
+      input.setAttribute("aria-invalid", "false");
+      validIcon.classList.add("valid-feedback-icon");
+      invalidIcon.classList.remove("invalid-feedback-icon");
+    }
+    function showInvalid(input, validIcon, invalidIcon) {
+      input.setAttribute("aria-invalid", "true");
+      validIcon.classList.remove("valid-feedback-icon");
+      invalidIcon.classList.add("invalid-feedback-icon");
+    }
+    function clearValidation(validIcon, invalidIcon) {
+      validIcon.classList.remove("valid-feedback-icon");
+      invalidIcon.classList.remove("invalid-feedback-icon");
+    }
+
+    // Username validation: at least 3 chars, alphanumeric and underscores
+    function validateUsername() {
+      const val = usernameInput.value.trim();
+      const re = /^[a-zA-Z0-9_]{3,}$/;
+      if (re.test(val)) {
+        showValid(usernameInput, icons.usernameValid, icons.usernameInvalid);
+        return true;
+      } else if(val === '') {
+        clearValidation(icons.usernameValid, icons.usernameInvalid);
+        return false;
+      } else {
+        showInvalid(usernameInput, icons.usernameValid, icons.usernameInvalid);
+        return false;
+      }
+    }
+
+    // Email validation: simple regex for emails
+    function validateEmail() {
+      const val = emailInput.value.trim();
+      // Basic email regex
+      const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (re.test(val)) {
+        showValid(emailInput, icons.emailValid, icons.emailInvalid);
+        return true;
+      } else if(val === '') {
+        clearValidation(icons.emailValid, icons.emailInvalid);
+        return false;
+      } else {
+        showInvalid(emailInput, icons.emailValid, icons.emailInvalid);
+        return false;
+      }
+    }
+
+    // Password strength check and visualization
+    function evaluatePasswordStrength(pw) {
+      let strength = 0;
+      if (pw.length >= 6) strength++;
+      if (/[A-Z]/.test(pw)) strength++;
+      if (/[0-9]/.test(pw)) strength++;
+      if (/[\W_]/.test(pw)) strength++;
+
+      if (pw.length === 0) return 'empty';
+      if (strength <= 1) return 'weak';
+      if (strength === 2 || strength === 3) return 'medium';
+      if (strength >= 4) return 'strong';
+    }
+    function updatePasswordStrength() {
+      const pw = passwordInput.value;
+      const strength = evaluatePasswordStrength(pw);
+      passwordStrengthBar.className = "";
+      if (strength === "empty") {
+        passwordStrengthBar.style.visibility = "hidden";
+      } else {
+        passwordStrengthBar.style.visibility = "visible";
+        passwordStrengthBar.classList.add(strength);
+      }
+    }
+
+    // Password validation: min 6 chars, show icon accordingly
+    function validatePassword() {
+      const pw = passwordInput.value;
+      if (pw.length >= 6) {
+        showValid(passwordInput, icons.passwordValid, icons.passwordInvalid);
+        return true;
+      } else if(pw === '') {
+        clearValidation(icons.passwordValid, icons.passwordInvalid);
+        return false;
+      } else {
+        showInvalid(passwordInput, icons.passwordValid, icons.passwordInvalid);
+        return false;
+      }
+    }
+
+    // Confirm password matches password
+    function validateConfirmPassword() {
+      const pw = passwordInput.value;
+      const cpw = confirmPasswordInput.value;
+      if (cpw === '') {
+        clearValidation(icons.confirmPasswordValid, icons.confirmPasswordInvalid);
+        return false;
+      }
+      if (cpw === pw) {
+        showValid(confirmPasswordInput, icons.confirmPasswordValid, icons.confirmPasswordInvalid);
+        return true;
+      } else {
+        showInvalid(confirmPasswordInput, icons.confirmPasswordValid, icons.confirmPasswordInvalid);
+        return false;
+      }
+    }
+
+    // Run validation on input events
+    usernameInput.addEventListener("input", validateUsername);
+    emailInput.addEventListener("input", validateEmail);
+    passwordInput.addEventListener("input", () => {
+      validatePassword();
+      updatePasswordStrength();
+      validateConfirmPassword();
+    });
+    confirmPasswordInput.addEventListener("input", validateConfirmPassword);
+
+    // Form submit validation - final check
+    function validateForm() {
+      const isUsernameValid = validateUsername();
+      const isEmailValid = validateEmail();
+      const isPasswordValid = validatePassword();
+      const isConfirmPasswordValid = validateConfirmPassword();
+
+      if (!isUsernameValid) {
+        usernameInput.focus();
+        return false;
+      }
+      if (!isEmailValid) {
+        emailInput.focus();
+        return false;
+      }
+      if (!isPasswordValid) {
+        passwordInput.focus();
+        return false;
+      }
+      if (!isConfirmPasswordValid) {
+        confirmPasswordInput.focus();
+        return false;
+      }
+
+      return true;
+    }
+    // Dark mode toggle logic
+    function toggleDarkMode() {
+      const body = document.body;
+      const icon = document.getElementById("themeIcon");
+      if (body.classList.contains("dark-mode")) {
+        body.classList.remove("dark-mode");
+        icon.classList.replace("bi-sun-fill", "bi-moon-fill");
+        localStorage.setItem("darkMode", "false");
+      } else {
+        body.classList.add("dark-mode");
+        icon.classList.replace("bi-moon-fill", "bi-sun-fill");
+        localStorage.setItem("darkMode", "true");
+      }
+    }
+    // On page load, apply saved theme
+    window.addEventListener("DOMContentLoaded", () => {
+      const darkMode = localStorage.getItem("darkMode");
+      if (darkMode === "true") {
+        document.body.classList.add("dark-mode");
+        document.getElementById("themeIcon").classList.replace("bi-moon-fill", "bi-sun-fill");
+      }
+    });
+  </script>
+</body>
+</html>
