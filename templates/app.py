@@ -10,21 +10,20 @@ import csv
 import io
 
 app = Flask(__name__)
-app.secret_key = '@Boateng@123'  # Replace with a secure key for production
+app.secret_key = '@Boateng@123'
 
 # MySQL connection
 db = mysql.connector.connect(
-    host="employment123.great-site.net",
-    user="if0_39101979",
-    password="uwanyagasani123",
-    database="if0_39101979_employment_prediction"
-)
+    host="sql202.infinityfree.com",         # replace with your actual SQL host
+    user="if0_39101979",            # replace with your InfinityFree username
+    password="uwanyagasani123",        # your InfinityFree MySQL password
+    database="if0_39101979_employment_prediction"  # your InfinityFree DB name
 cursor = db.cursor()
 
 # Login manager setup
 login_manager = LoginManager(app)
 
-# In-memory user store (for demo purposes)
+# In-memory user store (for demo)
 users = {}
 
 class User(UserMixin):
@@ -39,8 +38,8 @@ def load_user(user_id):
 
 # Google OAuth setup
 google_bp = make_google_blueprint(
-    client_id="GOOGLE_CLIENT_ID",  # Replace with actual Google client ID
-    client_secret="GOOGLE_CLIENT_SECRET",  # Replace with actual secret
+    client_id="ujerome250@gmail.com",
+    client_secret="@Boateng@123",
     redirect_url="/login/google/authorized",
     scope=["profile", "email"]
 )
